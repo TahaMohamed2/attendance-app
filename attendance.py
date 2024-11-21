@@ -21,12 +21,12 @@ def filter_att(df, valid_result):
     # Create invalid_att by merging df with valid_result on WeekNumber, Week_day, and Hour and keeping the rest
     invalid_att = df.merge(valid_result, how='outer', left_on=['WeekNumber', 'Week_day', 'Hour'], right_on=['WeekNumber', 'Week_day', 'Hour'], indicator=True)
     invalid_att = invalid_att[invalid_att['_merge'] == 'left_only'].drop(columns=['_merge'])
-    print(invalid_att,valid_att)
-    return valid_att
+    #print(invalid_att,valid_att)
+    return valid_att,invalid_att
 
 
 def convert_date(date_str):
-    """Convert various date formats to datetime."""
+    #Convert various date formats to datetime
     try:
         return pd.to_datetime(date_str, errors='raise')
     except (ValueError, TypeError):
@@ -80,8 +80,9 @@ def clean_data(df):
     valid_result = valid_dates(df)
 
     #filtering te invalid attendance entries
-    filtered_df = filter_att(df, valid_result)
+    filtered_df,filteredout_df = filter_att(df, valid_result)
     df = filtered_df
+    print (filteredout_df)
     df.drop(columns=['WeekNumber','Week_day'], inplace=True)
 
     # Create every week columns
@@ -101,11 +102,13 @@ def aggregate_attendance(df):
     result = df.groupby('ID').agg('sum').reset_index()
     result['attendance'] = 0
     
-    for i in range(result.shape[0]):
-        for j in range(1, result.shape[1]):
+    for i in range(result.shape[0]):    #itrate over IDs
+        for j in range(1, result.shape[1]-1): #iterate over weeks
             if result.iloc[i, j] > 0:
                 result.iloc[i, j] = 1
-                result.at[i, 'attendance'] += 1
+                #explain error on next line as values never exceed 2 ?
+                result.at[i, 'attendance'] = result.at[i, 'attendance']+1
+                #print(i,j,result.at[i, 'attendance'] )
     
     return result.sort_values(by='ID')
 

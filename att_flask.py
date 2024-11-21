@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 
 from attendance import  attendance_main, extract_file_id
 
@@ -13,7 +13,9 @@ def index():
         return render_template('submit.html', url_input=url, file_id=file_id) #, result=att_table)
     return render_template('index.html')
 
-
+@app.route('/download/<path:filename>', methods=['GET'])
+def download_file(filename):
+    return send_from_directory('', filename)
 
 # Main execution flow
 if __name__ == '__main__':

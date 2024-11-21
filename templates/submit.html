@@ -10,7 +10,8 @@
     <p>The URL you entered is: {{ url_input }}</p>
     <p>File ID is: {{ file_id }}</p>
     <div>Attendance table:<br> {{ result }}</div>
-
+    <!-- Download Button -->
+    <a href="{{ url_for('download_file', filename='result_attsheet.xlsx') }}" class="button">Download result_attsheet.xlsx</a>
     <a href="/">Go Back</a>
 </body>
 </html>
