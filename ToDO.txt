@@ -1,0 +1,7 @@
+To Do:
+  - save download filterred out data to excel file and make a link to.
+  - calculate threshold of invalid time slots dynamically as 20% of average attendance per day.
+
+Later:
+  - profile function calls to detect slow functions for further optimization.
+  
