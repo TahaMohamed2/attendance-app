@@ -22,6 +22,7 @@ def filter_att(df, valid_result):
     invalid_att = df.merge(valid_result, how='outer', left_on=['WeekNumber', 'Week_day', 'Hour'], right_on=['WeekNumber', 'Week_day', 'Hour'], indicator=True)
     invalid_att = invalid_att[invalid_att['_merge'] == 'left_only'].drop(columns=['_merge'])
     #print(invalid_att,valid_att)
+    invalid_att.to_excel('invalid_att_entries.xlsx', index=False)
     return valid_att,invalid_att
 
 
@@ -50,6 +51,7 @@ def extract_file_id(url_input):
 def download_file(file_id):
     """Download the Google Drive file as a CSV."""
     url = f'https://docs.google.com/spreadsheets/d/{file_id}/export?format=csv'
+    print (url)
     output_file = 'attsheet.csv'
     try:
         gdown.download(url, output_file, fuzzy=True, quiet=False)
